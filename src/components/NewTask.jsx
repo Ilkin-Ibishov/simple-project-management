@@ -8,7 +8,8 @@ export default function NewTask({ currentTasks, onAddTask, projectId, changeTask
   const handleAddTask = async () => {
     const taskName = newTask.current.value.trim();
     if (taskName) {
-        const allTasks = [...currentTasks, {name: taskName}]
+        const newTaskId = projectId + String(Math.random())
+        const allTasks = [...currentTasks, {name: taskName, id: newTaskId}]
         let newData = {tasks: 
             allTasks
           }
@@ -16,7 +17,7 @@ export default function NewTask({ currentTasks, onAddTask, projectId, changeTask
         onAddTask()
         newTask.current.value = '';
         const tasksData = await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'GET', data: undefined });
-        changeTasks(tasksData)
+        changeTasks(tasksData.tasks)
     }
   };
 

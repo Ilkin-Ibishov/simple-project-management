@@ -2,7 +2,6 @@ export function requestFunction({ destination, data, id, fetchMethod }) {
     if (id !== '') {
       destination += '/' + id;
     }
-    
     return new Promise((resolve, reject) => {
       fetch(`http://localhost:3000/${destination}`, {
         method: fetchMethod,

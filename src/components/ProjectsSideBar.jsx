@@ -1,4 +1,6 @@
 import Button from "./Button"
+import { motion } from "framer-motion"
+
 
 export default function ProjectsSideBar({onSelectProject, onStartNewProject, projects, selectedProjectId}){
     return <>
@@ -15,7 +17,7 @@ export default function ProjectsSideBar({onSelectProject, onStartNewProject, pro
                 }
                 return (
                     <li key={key}>
-                        <button onClick={()=>onSelectProject(project.id)} className={cssClasses}>{project.title}</button>
+                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.8 }}><button onClick={()=>onSelectProject(project.id)} className={cssClasses}>{project.title}</button></motion.div>
                     </li>
                 )
             })}

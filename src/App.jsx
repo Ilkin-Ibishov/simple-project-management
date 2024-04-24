@@ -65,7 +65,6 @@ function App() {
   }else if(projectState.selectedProjectId === undefined){
     content = <NoProject onStartNewProject={handleStartProjectState} />
   }
-  console.log(projectState);
   return (
     <main className=" h-screen flex gap-8">
       <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />
