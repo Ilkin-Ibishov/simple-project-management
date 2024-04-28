@@ -15,32 +15,41 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-export const ProjectSidebarMobile = (props) => {
+export const ProjectSidebarMobile = ({projects, onStartNewProject, selectedProjectId, onSelectProject}, props) => {
+    const navItems = projects.map(project=>{return project.title})
+    console.log(navItems);
     const { window } = props;
-const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+    const drawerWidth = 240;
+    const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
-  };
-
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
-      </Typography>
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+    const handleDrawerToggle = () => {
+        setMobileOpen((prevState) => !prevState);
+    };
+    const drawer = (
+        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+            <Typography variant="h6" sx={{ my: 2 }}>
+            YOUR PROJECTS
+            </Typography>
+            <Divider />
+            <List>
+                <div><Button onClick={onStartNewProject}> + Add project</Button></div>
+                {projects.map((item) => {
+                    let cssClasses = ' w-full text-left px-2 py-1 rounded-sm my-1 hover:text-stone-200 hover:bg-stone-800'
+                    if(item.id === selectedProjectId){
+                        cssClasses += ' bg-stone-800 text-stone-200'
+                    }else{
+                        cssClasses += ' text-stone-400'
+                    }
+                    return(
+                        <ListItem onClick={()=>onSelectProject(item.id)} className={cssClasses} key={item.id} disablePadding>
+                            <ListItemButton sx={{ textAlign: 'center' }}>
+                            <ListItemText primary={item.title} />
+                            </ListItemButton>
+                        </ListItem>
+                        )
+                } )}
+            </List>
+        </Box>
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
@@ -48,7 +57,7 @@ const navItems = ['Home', 'About', 'Contact'];
 
 
   return (<Box sx={{ display: 'flex' }}>
-    <AppBar component="nav">
+    <AppBar component="nav" sx={{backgroundColor: 'rgb(28 25 23)'}}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -58,13 +67,14 @@ const navItems = ['Home', 'About', 'Contact'];
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
+            <p>YOUR PROJECTS</p>
           </IconButton>
           <Typography
             variant="h6"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            YOUR PROJECTS
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (

@@ -73,7 +73,7 @@ function App() {
   console.log(deviceWidth);
   return (<ProjectContext.Provider value={handleAfterProjectEdit}>
     <main className=" h-screen flex gap-8">
-      {deviceWidth> 500? <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />: <ProjectSidebarMobile />}
+      {deviceWidth> 500? <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />: <ProjectSidebarMobile onStartNewProject={handleStartProjectState} projects={projectState.projects} onSelectProject={handleSelectProject} selectedProjectId={projectState.selectedProjectId} />}
       {content}
     </main>
     </ProjectContext.Provider>
