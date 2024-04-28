@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Task from "./Task.jsx";
 
-const TaskList =  ({projectTasks, onAddTask, projectId, changeTasks}) => {
+const TaskList =  ({projectTasks, projectId, changeTasks}) => {
   const [ProjectTasks, setTasks] = useState(projectTasks);
   useEffect(()=>{
     setTasks(projectTasks)
@@ -22,7 +22,7 @@ const TaskList =  ({projectTasks, onAddTask, projectId, changeTasks}) => {
   };
   return ( <section>
         <h2 className=" text-2xl font-bold text-stone-700 my-4">Tasks</h2>
-        <NewTask changeTasks={changeTasks} projectId={projectId} currentTasks={projectTasks} onAddTask={onAddTask} />
+        <NewTask changeTasks={changeTasks} projectId={projectId} currentTasks={projectTasks} />
         <DndProvider backend={HTML5Backend}>
             {ProjectTasks.length > 0? undefined: <span className=" my-3">There is currently not any tasks available in this project</span>}
             <div className="w-full max-w-md mt-8">

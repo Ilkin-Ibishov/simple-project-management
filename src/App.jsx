@@ -4,6 +4,7 @@ import NoProject from "./components/NoProject";
 import { useEffect, useState } from "react";
 import SelectedProject from "./components/SelectedProject";
 import { requestFunction } from "./requests/request";
+import { ProjectContext } from "./store/add-new-task-context";
 function App() {
   const [projectState, setProjectState] = useState({
     selectedProjectId: undefined,
@@ -65,11 +66,12 @@ function App() {
   }else if(projectState.selectedProjectId === undefined){
     content = <NoProject onStartNewProject={handleStartProjectState} />
   }
-  return (
+  return (<ProjectContext.Provider value={handleAddTask}>
     <main className=" h-screen flex gap-8">
       <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />
       {content}
     </main>
+    </ProjectContext.Provider>
   );
 }
 

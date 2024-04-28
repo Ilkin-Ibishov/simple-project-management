@@ -1,9 +1,12 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { requestFunction } from "../requests/request";
+import { ProjectContext } from "../store/add-new-task-context";
+import Tooltip from '@mui/material/Tooltip';
+import InfoIcon from '@mui/icons-material/Info';
 
-
-export default function NewTask({ currentTasks, onAddTask, projectId, changeTasks }) {
+export default function NewTask({ currentTasks, projectId, changeTasks }) {
   const newTask = useRef();
+  const addtaskCtx = useContext(ProjectContext)
 
   const handleAddTask = async () => {
     const taskName = newTask.current.value.trim();
@@ -14,7 +17,7 @@ export default function NewTask({ currentTasks, onAddTask, projectId, changeTask
             allTasks
           }
         await requestFunction({destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: newData });
-        onAddTask()
+        addtaskCtx.handleAddTask
         newTask.current.value = '';
         const tasksData = await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'GET', data: undefined });
         changeTasks(tasksData.tasks)
@@ -27,6 +30,9 @@ export default function NewTask({ currentTasks, onAddTask, projectId, changeTask
       <button onClick={handleAddTask} className="text-stone-700 hover:text-stone-950">
         Add Task
       </button>
+      <Tooltip placement={"right"} title="Drag and drop tasks to change their order">
+        <InfoIcon />
+      </Tooltip>
     </div>
   );
 }

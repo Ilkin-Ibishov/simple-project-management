@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { requestFunction } from "../requests/request";
 import Modal from "./Modal";
 
-export default function SelectedProject({ project, onDelete, onAddTask }) {
+export default function SelectedProject({ project, onDelete }) {
   const [tasks, setTasks] = useState([]);
   const [isEditActive, setEditActive] = useState(false)
   const inputProjectName = useRef(null);
@@ -56,7 +56,7 @@ export default function SelectedProject({ project, onDelete, onAddTask }) {
         <p className="mb-4 text-stone-400">{ isEditActive? <input type="date" ref={inputProjectDueDate} defaultValue={project.dueDate} />: formattedDate}</p>
         <p className="text-stone-600 whitespace-pre-wrap">{isEditActive? <input className=" w-80" ref={inputProjectDescription} defaultValue={project.description} type="text" />: project.description}</p>
       </header>
-      <TaskList changeTasks={setTasks} projectId={project.id} onAddTask={onAddTask} projectTasks={tasks} />
+      <TaskList changeTasks={setTasks} projectId={project.id} projectTasks={tasks} />
     </div>
   );
 }
