@@ -3,6 +3,7 @@ import { requestFunction } from "../requests/request";
 import { ProjectContext } from "../store/add-new-task-context";
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
+import { motion } from "framer-motion"
 
 export default function NewTask({ currentTasks, projectId, changeTasks }) {
   const newTask = useRef();
@@ -28,11 +29,13 @@ export default function NewTask({ currentTasks, projectId, changeTasks }) {
 
   return (
     <div className="flex items-center gap-4">
-      <input ref={newTask} className="w-64 px-2 py-1 rounded-sm bg-stone-200" type="text" />
-      <button onClick={handleAddTask} className="text-stone-700 hover:text-stone-950">
+      <input placeholder=" New task name..." ref={newTask} className="w-64 px-2 py-1 rounded-sm bg-stone-200" type="text" />
+      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.8 }}>
+        <button onClick={handleAddTask} className="text-stone-700 hover:text-stone-950">
         Add Task
-      </button>
-      <Tooltip placement={"right"} title="Drag and drop tasks to change their order">
+        </button>
+      </motion.div>
+      <Tooltip placement={"right"} title="You can drag and drop tasks to change their order">
         <InfoIcon />
       </Tooltip>
     </div>

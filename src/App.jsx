@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import SelectedProject from "./components/SelectedProject";
 import { requestFunction } from "./requests/request";
 import { ProjectContext } from "./store/add-new-task-context";
+import { useDeviceWidth } from "./components/DeviceWidthFunction";
+import { ProjectSidebarMobile } from "./components/ProjectSidebarMobile";
+
 function App() {
+  const deviceWidth = useDeviceWidth();
   const [projectState, setProjectState] = useState({
     selectedProjectId: undefined,
     projects:[]
@@ -66,9 +70,10 @@ function App() {
   }else if(projectState.selectedProjectId === undefined){
     content = <NoProject onStartNewProject={handleStartProjectState} />
   }
+  console.log(deviceWidth);
   return (<ProjectContext.Provider value={handleAfterProjectEdit}>
     <main className=" h-screen flex gap-8">
-      <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />
+      {deviceWidth> 500? <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />: <ProjectSidebarMobile />}
       {content}
     </main>
     </ProjectContext.Provider>
