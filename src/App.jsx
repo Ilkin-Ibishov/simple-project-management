@@ -50,7 +50,7 @@ function App() {
       selectedProjectId: undefined,}
     })
   }
-  const handleAddTask = async () => {
+  const handleAfterProjectEdit = async () => {
     const currentProjectId = projectState.selectedProjectId
     await fetchData();
     setProjectState(prevState=>{
@@ -60,13 +60,13 @@ function App() {
     })
     
   }
-  let content = <SelectedProject onAddTask={handleAddTask} project={selectedProject} onDelete={handleDeleteProject} />
+  let content = <SelectedProject onProjectEdit={handleAfterProjectEdit} project={selectedProject} onDelete={handleDeleteProject} />
   if(projectState.selectedProjectId === null){
     content = <NewProject fetchData={fetchData} setProjectState={setProjectState}/>
   }else if(projectState.selectedProjectId === undefined){
     content = <NoProject onStartNewProject={handleStartProjectState} />
   }
-  return (<ProjectContext.Provider value={handleAddTask}>
+  return (<ProjectContext.Provider value={handleAfterProjectEdit}>
     <main className=" h-screen flex gap-8">
       <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />
       {content}

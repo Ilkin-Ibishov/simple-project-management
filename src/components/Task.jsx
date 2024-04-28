@@ -51,7 +51,7 @@ const Task = ({ id, text, index, moveTask, setTasks, tasks, projectId }) => {
         newTasks[index] = { name: newTaskInputName.current.value, id: id };
         setTasks(newTasks);
         setEditActive(false);
-        await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: {tasks: tasks} });
+        await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: {tasks: newTasks} });
 
     }
     const handleDelete = async ()=>{
@@ -59,9 +59,10 @@ const Task = ({ id, text, index, moveTask, setTasks, tasks, projectId }) => {
             return deletedTask.id !== id
         }
         const newTasks = [...tasks].filter(deleter)
+        console.log(newTasks);
         setTasks(newTasks);
         setEditActive(false);
-        await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: {tasks: tasks} });
+        await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: {tasks: newTasks} });
     }
     
     return (

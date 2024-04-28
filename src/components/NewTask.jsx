@@ -17,10 +17,12 @@ export default function NewTask({ currentTasks, projectId, changeTasks }) {
             allTasks
           }
         await requestFunction({destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: newData });
-        addtaskCtx.handleAddTask
+        addtaskCtx.handleAfterProjectEdit
         newTask.current.value = '';
         const tasksData = await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'GET', data: undefined });
-        changeTasks(tasksData.tasks)
+        console.log(tasksData);
+        changeTasks(prevP=> {
+          return {...prevP, tasks: tasksData.tasks}})
     }
   };
 

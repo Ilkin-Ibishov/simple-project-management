@@ -3,27 +3,42 @@ import { useEffect, useState, useRef } from "react";
 import { requestFunction } from "../requests/request";
 import Modal from "./Modal";
 
-export default function SelectedProject({ project, onDelete }) {
-  const [tasks, setTasks] = useState([]);
+export default function SelectedProject({ project, onDelete, onProjectEdit }) {
+  const [selectedProject, setSelectedProject] = useState({...project, tasks: []});
   const [isEditActive, setEditActive] = useState(false)
   const inputProjectName = useRef(null);
   const inputProjectDescription = useRef(null);
   const inputProjectDueDate = useRef(null);
   const modal = useRef();
+  // Assuming dueDate is a string in the format "YYYY-MM-DD"
+const dueDate = project.dueDate;
+
+// Convert the dueDate string to a Date object
+const dueDateObject = new Date(dueDate);
+
+// Get the current date
+const currentDate = new Date();
+
+// Calculate the difference in milliseconds between the due date and the current date
+const differenceInMilliseconds = dueDateObject - currentDate;
+
+// Convert milliseconds to days
+const daysRemaining = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+console.log("Days remaining:", daysRemaining);
   const handleProjectEditSave = async()=>{
     const editedProjectData = {title: inputProjectName.current.value, description: inputProjectDescription.current.value, dueDate: inputProjectDueDate.current.value}
     await requestFunction({destination: 'projects', id: project.id, fetchMethod: 'PUT', data: editedProjectData })
     setEditActive(false)
-    const responseData = await requestFunction({ destination: 'projectTasks', id: project.id, fetchMethod: 'GET', data: undefined });
-    const tasksData = responseData.tasks;
-    setTasks(tasksData);
+    onProjectEdit()
   }
   useEffect(() => {
+    const daysRemaining = Math.ceil((new Date(project.dueDate) - new Date()) / (1000 * 60 * 60 * 24))
     const fetchTasks = async () => {
       try {
         const responseData = await requestFunction({ destination: 'projectTasks', id: project.id, fetchMethod: 'GET', data: undefined });
         const tasksData = responseData.tasks;
-        setTasks(tasksData);
+        setSelectedProject({...project, tasks: tasksData})
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
@@ -31,7 +46,6 @@ export default function SelectedProject({ project, onDelete }) {
 
     fetchTasks();
   }, [project]);
-  console.log(project);
   // Format the date
   const formattedDate = new Date(project.dueDate).toLocaleDateString('en-UK', {
     year: 'numeric',
@@ -47,16 +61,23 @@ export default function SelectedProject({ project, onDelete }) {
       </Modal>
       <header className="pb-4 mb-4 border-b-2 border-stone-300">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-stone-600 mb-2">{isEditActive? <input ref={inputProjectName} className=" border-2 bg-stone-100" defaultValue={project.title} type="text" />: project.title}</h1>
+          <h1 className="text-3xl font-bold text-stone-600 mb-2">{isEditActive? <input ref={inputProjectName} className=" border-2 bg-stone-100" defaultValue={project.title} type="text" />: selectedProject.title}</h1>
           <div>
           {isEditActive? <button onClick={()=>handleProjectEditSave()} className=" text-slate-900 hover:text-slate-600 bg-gray-200 p-2 mr-4">Save</button> :<button onClick={()=>setEditActive(true)} className=" text-slate-900 hover:text-slate-600 bg-gray-200 p-2 mr-4">Edit</button>}
           {isEditActive? <button onClick={()=>setEditActive(false)} className=" text-stone-400 hover:text-stone-800 bg-gray-200 p-2">Cancel</button> : <button onClick={()=>modal.current.open()} className=" text-red-400 hover:text-red-800 bg-gray-200 p-2">Delete</button>}
           </div>
         </div>
-        <p className="mb-4 text-stone-400">{ isEditActive? <input type="date" ref={inputProjectDueDate} defaultValue={project.dueDate} />: formattedDate}</p>
-        <p className="text-stone-600 whitespace-pre-wrap">{isEditActive? <input className=" w-80" ref={inputProjectDescription} defaultValue={project.description} type="text" />: project.description}</p>
+        <div className="flex gap-6">
+        <div className="flex gap-2">
+          <p>{ isEditActive? "Change deadline date" :"Deadline date:"}</p>
+          <p className="mb-4 text-stone-400">{ isEditActive? <input className=" border-2 border-black" type="date" ref={inputProjectDueDate} defaultValue={project.dueDate} />: formattedDate}</p>
+        </div>
+        <p>Days remaining: {daysRemaining}</p>
+        </div>
+        <p className="text-stone-600 whitespace-pre-wrap">{isEditActive? <input className=" w-80" ref={inputProjectDescription} defaultValue={project.description} type="text" />: selectedProject.description}</p>
       </header>
-      <TaskList changeTasks={setTasks} projectId={project.id} projectTasks={tasks} />
+      <TaskList changeTasks={setSelectedProject} projectId={project.id} projectTasks={selectedProject.tasks} />
     </div>
   );
 }
+
