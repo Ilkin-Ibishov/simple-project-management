@@ -17,7 +17,6 @@ import Button from '@mui/material/Button';
 
 export const ProjectSidebarMobile = ({projects, onStartNewProject, selectedProjectId, onSelectProject}, props) => {
     const navItems = projects.map(project=>{return project.title})
-    console.log(navItems);
     const { window } = props;
     const drawerWidth = 240;
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -27,7 +26,7 @@ export const ProjectSidebarMobile = ({projects, onStartNewProject, selectedProje
     };
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-            <Typography variant="h6" sx={{ my: 2 }}>
+            <Typography  variant="h6" sx={{ my: 2 }}>
             YOUR PROJECTS
             </Typography>
             <Divider />
@@ -67,7 +66,7 @@ export const ProjectSidebarMobile = ({projects, onStartNewProject, selectedProje
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
-            <p>YOUR PROJECTS</p>
+            <p className=' text-lg pl-2'>YOUR PROJECTS</p>
           </IconButton>
           <Typography
             variant="h6"
