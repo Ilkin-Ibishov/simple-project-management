@@ -10,20 +10,11 @@ export default function SelectedProject({ project, onDelete, onProjectEdit }) {
   const inputProjectDescription = useRef(null);
   const inputProjectDueDate = useRef(null);
   const modal = useRef();
-  // Assuming dueDate is a string in the format "YYYY-MM-DD"
-const dueDate = project.dueDate;
-
-// Convert the dueDate string to a Date object
-const dueDateObject = new Date(dueDate);
-
-// Get the current date
-const currentDate = new Date();
-
-// Calculate the difference in milliseconds between the due date and the current date
-const differenceInMilliseconds = dueDateObject - currentDate;
-
-// Convert milliseconds to days
-const daysRemaining = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+  const dueDate = project.dueDate;
+  const dueDateObject = new Date(dueDate);
+  const currentDate = new Date();
+  const differenceInMilliseconds = dueDateObject - currentDate;
+  const daysRemaining = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
 console.log("Days remaining:", daysRemaining);
   const handleProjectEditSave = async()=>{

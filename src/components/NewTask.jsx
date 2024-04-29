@@ -13,19 +13,13 @@ export default function NewTask({ currentTasks, projectId, changeTasks }) {
     const taskName = newTask.current.value.trim();
     if (taskName) {
         const newTaskId = projectId + String(Math.random())
-        const allTasks = [...currentTasks, {name: taskName, id: newTaskId}]
-        let newData = {tasks: 
-            allTasks
-          }
-        await requestFunction({destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: newData });
+        await requestFunction({destination: 'projectTasks', id: projectId, fetchMethod: 'PUT', data: {tasks: [...currentTasks, {name: taskName, id: newTaskId}]} });
         addtaskCtx.handleAfterProjectEdit
         newTask.current.value = '';
         const tasksData = await requestFunction({ destination: 'projectTasks', id: projectId, fetchMethod: 'GET', data: undefined });
         console.log(tasksData);
-        changeTasks(prevP=> {
-          return {...prevP, tasks: tasksData.tasks}})
-    }
-  };
+        changeTasks(prevP=> ({...prevP, tasks: tasksData.tasks}))}
+  }
 
   return (
     <div className="flex items-center gap-4">
