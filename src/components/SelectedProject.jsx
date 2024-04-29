@@ -3,20 +3,13 @@ import { useEffect, useState, useRef } from "react";
 import { requestFunction } from "../requests/request";
 import Modal from "./Modal";
 
-export default function SelectedProject({ project, onDelete, onProjectEdit }) {
-  const [selectedProject, setSelectedProject] = useState({...project, tasks: []});
-  const [isEditActive, setEditActive] = useState(false)
-  const inputProjectName = useRef(null);
-  const inputProjectDescription = useRef(null);
-  const inputProjectDueDate = useRef(null);
-  const modal = useRef();
-  const dueDate = project.dueDate;
-  const dueDateObject = new Date(dueDate);
-  const currentDate = new Date();
-  const differenceInMilliseconds = dueDateObject - currentDate;
-  const daysRemaining = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-console.log("Days remaining:", daysRemaining);
+export default function SelectedProject({ project, onDelete, onProjectEdit, isEditActive, setEditActive }) {
+  const [selectedProject, setSelectedProject] = useState({...project, tasks: []})
+  const inputProjectName = useRef(null)
+  const inputProjectDescription = useRef(null)
+  const inputProjectDueDate = useRef(null)
+  const modal = useRef()
+  const daysRemaining = Math.ceil((new Date(project.dueDate) - new Date()) / (1000 * 60 * 60 * 24))
   const handleProjectEditSave = async()=>{
     const editedProjectData = {title: inputProjectName.current.value, description: inputProjectDescription.current.value, dueDate: inputProjectDueDate.current.value}
     await requestFunction({destination: 'projects', id: project.id, fetchMethod: 'PUT', data: editedProjectData })
@@ -24,7 +17,6 @@ console.log("Days remaining:", daysRemaining);
     onProjectEdit()
   }
   useEffect(() => {
-    const daysRemaining = Math.ceil((new Date(project.dueDate) - new Date()) / (1000 * 60 * 60 * 24))
     const fetchTasks = async () => {
       try {
         const responseData = await requestFunction({ destination: 'projectTasks', id: project.id, fetchMethod: 'GET', data: undefined });
@@ -65,7 +57,7 @@ console.log("Days remaining:", daysRemaining);
         </div>
         <p>Days remaining: {daysRemaining}</p>
         </div>
-        <p className="text-stone-600 whitespace-pre-wrap">{isEditActive? <input className=" w-80" ref={inputProjectDescription} defaultValue={project.description} type="text" />: selectedProject.description}</p>
+        {isEditActive? <textarea className=" w-96" ref={inputProjectDescription} defaultValue={project.description} type="text" />: <p className="text-stone-600 whitespace-pre-wrap overflow-y-scroll max-h-36 bg-stone-100 p-2">{selectedProject.description}</p>}
       </header>
       <TaskList changeTasks={setSelectedProject} projectId={project.id} projectTasks={selectedProject.tasks} />
     </div>

@@ -5,15 +5,14 @@ import { useEffect, useState } from "react";
 import SelectedProject from "./components/SelectedProject";
 import { requestFunction } from "./requests/request";
 import { ProjectContext } from "./store/add-new-task-context";
-import { useDeviceWidth } from "./components/DeviceWidthFunction";
 import { ProjectSidebarMobile } from "./components/ProjectSidebarMobile";
 
 function App() {
-  const deviceWidth = useDeviceWidth();
   const [projectState, setProjectState] = useState({
     selectedProjectId: undefined,
     projects:[]
   })
+  const [isProjectEditActive, setProjectEditActive] = useState(false)
   const fetchData = async () => {
     try {
       const projects = await requestFunction({ destination: 'projects', id: '', fetchMethod: 'GET', data: undefined });
@@ -35,6 +34,7 @@ function App() {
     setProjectState(prevState=>{return{
       ...prevState, selectedProjectId:id,
     }})
+    setProjectEditActive(false)
   }
   const selectedProject = projectState.projects.find(project=>project.id === projectState.selectedProjectId)
   function handleStartProjectState(){
@@ -64,16 +64,21 @@ function App() {
     })
     
   }
-  let content = <SelectedProject onProjectEdit={handleAfterProjectEdit} project={selectedProject} onDelete={handleDeleteProject} />
+  let content = <SelectedProject setEditActive={setProjectEditActive} isEditActive={isProjectEditActive} onProjectEdit={handleAfterProjectEdit} project={selectedProject} onDelete={handleDeleteProject} />
   if(projectState.selectedProjectId === null){
     content = <NewProject fetchData={fetchData} setProjectState={setProjectState}/>
   }else if(projectState.selectedProjectId === undefined){
     content = <NoProject onStartNewProject={handleStartProjectState} />
   }
-  console.log(deviceWidth);
   return (<ProjectContext.Provider value={handleAfterProjectEdit}>
     <main className=" h-screen flex gap-8">
-      {deviceWidth> 500? <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />: <ProjectSidebarMobile onStartNewProject={handleStartProjectState} projects={projectState.projects} onSelectProject={handleSelectProject} selectedProjectId={projectState.selectedProjectId} />}
+      
+      <div className="sm:flex hidden">
+          <ProjectsSideBar selectedProjectId={projectState.selectedProjectId} onSelectProject={handleSelectProject} onStartNewProject={handleStartProjectState} projects={projectState.projects} />
+      </div>
+      <div className="sm:hidden flex">
+          <ProjectSidebarMobile onStartNewProject={handleStartProjectState} projects={projectState.projects} onSelectProject={handleSelectProject} selectedProjectId={projectState.selectedProjectId} />
+      </div>
       {content}
     </main>
     </ProjectContext.Provider>
